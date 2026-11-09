@@ -1,0 +1,4096 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ELIA</title>
+
+<script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+
+html{scroll-behavior:smooth}
+
+body{
+  font-family:Arial,Helvetica,sans-serif;
+  background:#f5f7fa;
+  color:#263238;
+  min-height:100vh
+}
+
+button,input{
+  font-family:inherit
+}
+
+button{
+  -webkit-tap-highlight-color:transparent
+}
+
+/* =========================================================
+   CABEÇALHO DO SISTEMA
+========================================================= */
+
+.cabecalho-sistema{
+  width:100%;
+  min-height:82px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:30px;
+  padding:10px 32px;
+  background:#fff;
+  border-bottom:1px solid #e1e6e9
+}
+
+.cabecalho-esquerdo{
+  display:flex;
+  align-items:center;
+  gap:16px;
+  min-width:0;
+  flex:1
+}
+
+.logo-sistema{
+  width:42px;
+  height:42px;
+  max-width:42px;
+  max-height:42px;
+  object-fit:contain;
+  display:block;
+  flex-shrink:0
+}
+
+.logo-fallback{
+  display:none;
+  align-items:center;
+  gap:8px;
+  color:#1267a5;
+  font-weight:800;
+  font-size:18px;
+  white-space:nowrap
+}
+
+.logo-fallback-mark{
+  width:30px;
+  height:30px;
+  border:3px solid #1267a5;
+  border-radius:7px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:18px
+}
+
+.titulo-sistema{
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  min-width:0
+}
+
+.logo-elia{
+  width:145px;
+  max-width:145px;
+  height:auto;
+  max-height:42px;
+  object-fit:contain;
+  display:block
+}
+
+.titulo-sistema span{
+  margin-top:4px;
+  font-size:10px;
+  color:#68757d;
+  white-space:nowrap
+}
+
+.seletor-unidade{
+  position:relative;
+  display:flex;
+  align-items:center;
+  gap:8px;
+  flex-shrink:0
+}
+
+.rotulo-unidade{
+  font-size:11px;
+  color:#68757d
+}
+
+.botao-unidade{
+  min-height:42px;
+  min-width:190px;
+  padding:0 14px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  background:#fff;
+  border:1px solid #dce2e6;
+  border-radius:8px;
+  color:#26343d;
+  font-size:13px;
+  font-weight:600;
+  cursor:pointer
+}
+
+.botao-unidade:hover{
+  background:#f5f7f8;
+  border-color:#b9c2c8
+}
+
+.seta-unidade{
+  font-size:15px;
+  color:#69757d;
+  flex-shrink:0
+}
+
+.menu-unidades{
+  position:absolute;
+  top:calc(100% + 7px);
+  right:0;
+  min-width:190px;
+  background:#fff;
+  border:1px solid #dce2e6;
+  border-radius:8px;
+  box-shadow:0 8px 25px rgba(0,0,0,.1);
+  padding:6px;
+  display:none;
+  z-index:1000
+}
+
+.menu-unidades.aberto{
+  display:block
+}
+
+.menu-unidades button{
+  width:100%;
+  padding:10px 12px;
+  background:transparent;
+  border:none;
+  border-radius:6px;
+  text-align:left;
+  color:#34414a;
+  font-size:12px;
+  cursor:pointer
+}
+
+.menu-unidades button:hover{
+  background:#f2f5f6
+}
+
+/* =========================================================
+   ESTRUTURA
+========================================================= */
+
+.conteudo{
+  width:min(920px,calc(100% - 40px));
+  margin:0 auto;
+  padding:58px 0 30px
+}
+
+.boas-vindas{
+  margin-bottom:34px
+}
+
+.boas-vindas h1,
+.cabecalho-pagina h1{
+  font-size:28px;
+  margin-bottom:8px
+}
+
+.boas-vindas p,
+.cabecalho-pagina p{
+  color:#6f7a84;
+  font-size:15px
+}
+
+.pagina-inicial{
+  display:block
+}
+
+.pagina-manual{
+  display:none
+}
+
+/* =========================================================
+   TELA INICIAL
+========================================================= */
+
+.opcoes-entrada{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:20px;
+  width:100%
+}
+
+.card-opcao{
+  position:relative;
+  width:100%;
+  min-height:150px;
+  background:#fff;
+  border:1px solid #dfe4e8;
+  border-radius:14px;
+  padding:24px 48px 24px 24px;
+  display:flex;
+  align-items:center;
+  gap:18px;
+  text-align:left;
+  cursor:pointer
+}
+
+.card-opcao:hover{
+  transform:translateY(-2px);
+  border-color:#b7c0c8;
+  box-shadow:0 8px 22px rgba(0,0,0,.07)
+}
+
+.icone-opcao{
+  width:58px;
+  height:58px;
+  min-width:58px;
+  border-radius:12px;
+  background:#f0f3f5;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:25px
+}
+
+.card-opcao>div:not(.icone-opcao){
+  min-width:0;
+  flex:1
+}
+
+.card-opcao h2{
+  font-size:17px;
+  margin-bottom:7px;
+  color:#111
+}
+
+.card-opcao p{
+  color:#727d86;
+  font-size:13px;
+  line-height:1.45
+}
+
+.seta-card{
+  position:absolute;
+  right:18px;
+  top:50%;
+  transform:translateY(-50%);
+  font-size:25px;
+  color:#a0a9b1
+}
+
+.informacao{
+  margin-top:28px;
+  background:#eef2f4;
+  border-radius:10px;
+  padding:17px 20px;
+  display:flex;
+  align-items:flex-start;
+  gap:12px;
+  font-size:13px
+}
+
+.icone-info{
+  font-size:18px
+}
+
+.informacao strong{
+  display:block;
+  margin-bottom:4px
+}
+
+.informacao p{
+  color:#68737c
+}
+
+/* =========================================================
+   PÁGINA MANUAL
+========================================================= */
+
+.cabecalho-pagina{
+  margin-bottom:35px
+}
+
+.botao-voltar{
+  border:none;
+  background:transparent;
+  color:#66717a;
+  font-size:13px;
+  cursor:pointer;
+  margin-bottom:20px;
+  padding:0
+}
+
+.botao-voltar:hover{
+  color:#263238
+}
+
+/* =========================================================
+   FORMULÁRIOS
+========================================================= */
+
+.bloco-formulario{
+  background:#fff;
+  border:1px solid #dfe4e8;
+  border-radius:14px;
+  padding:28px;
+  margin-bottom:20px
+}
+
+.titulo-bloco{
+  display:flex;
+  align-items:center;
+  gap:13px;
+  margin-bottom:25px
+}
+
+.numero-bloco{
+  width:32px;
+  height:32px;
+  border-radius:50%;
+  background:#eef2f4;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-weight:bold;
+  font-size:13px;
+  flex-shrink:0
+}
+
+.titulo-bloco h2{
+  font-size:17px;
+  margin-bottom:4px
+}
+
+.titulo-bloco p{
+  color:#7a858e;
+  font-size:12px
+}
+
+.grade-formulario{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:20px
+}
+
+.campo{
+  display:flex;
+  flex-direction:column
+}
+
+.campo-grande{
+  grid-column:1/-1
+}
+
+.campo label{
+  font-size:12px;
+  font-weight:bold;
+  margin-bottom:7px;
+  color:#4c5861
+}
+
+.campo input{
+  height:42px;
+  border:1px solid #d6dce1;
+  border-radius:8px;
+  padding:0 12px;
+  outline:none;
+  font-size:14px;
+  background:#fff
+}
+
+.campo input:focus{
+  border-color:#8e99a2;
+  box-shadow:0 0 0 3px rgba(120,130,140,.08)
+}
+
+.opcoes-radio{
+  height:42px;
+  display:flex;
+  align-items:center;
+  gap:25px
+}
+
+.radio-opcao{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  cursor:pointer;
+  font-size:14px
+}
+
+.radio-opcao input{
+  width:16px;
+  height:16px
+}
+
+.previsao-numeracao{
+  margin-top:22px;
+  padding:14px 16px;
+  border-radius:9px;
+  background:#f4f6f7;
+  display:flex;
+  align-items:center;
+  gap:12px
+}
+
+.icone-previsao{
+  font-size:20px
+}
+
+.previsao-numeracao strong{
+  display:block;
+  font-size:13px;
+  margin-bottom:3px
+}
+
+.previsao-numeracao p{
+  font-size:12px;
+  color:#707b84
+}
+
+/* =========================================================
+   TAMANHOS
+========================================================= */
+
+.opcoes-tamanho{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:15px
+}
+
+.card-tamanho{
+  background:#fff;
+  border:1px solid #dfe4e8;
+  border-radius:12px;
+  padding:18px;
+  cursor:pointer;
+  text-align:center
+}
+
+.card-tamanho:hover{
+  border-color:#aab3ba;
+  transform:translateY(-2px)
+}
+
+.card-tamanho.selecionado{
+  border:2px solid #263238;
+  background:#f8f9fa
+}
+
+.folha-preview{
+  width:110px;
+  height:80px;
+  margin:0 auto 15px;
+  background:#f8f9fa;
+  border:1px solid #cbd2d7;
+  padding:4px;
+  display:grid;
+  gap:3px
+}
+
+.folha-a4{
+  grid-template-columns:1fr
+}
+
+.folha-a5{
+  grid-template-columns:1fr 1fr
+}
+
+.folha-a6{
+  grid-template-columns:1fr 1fr;
+  grid-template-rows:1fr 1fr
+}
+
+.etiqueta-mini{
+  background:#fff;
+  border:1px solid #aeb7be;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:9px;
+  color:#6c767e
+}
+
+.informacao-tamanho strong{
+  display:block;
+  font-size:16px;
+  margin-bottom:4px
+}
+
+.informacao-tamanho span{
+  display:block;
+  font-size:11px;
+  color:#707b84;
+  margin-bottom:7px
+}
+
+.informacao-tamanho small{
+  font-size:10px;
+  color:#9099a0
+}
+
+/* =========================================================
+   RESUMO
+========================================================= */
+
+.resumo-etiqueta{
+  background:#eef2f4;
+  border-radius:10px;
+  padding:17px 20px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:15px;
+  margin-top:25px
+}
+
+.resumo-etiqueta strong{
+  display:block;
+  font-size:13px;
+  margin-bottom:4px
+}
+
+.resumo-etiqueta p{
+  font-size:12px;
+  color:#6e7982
+}
+
+#resumoQuantidade{
+  font-weight:bold;
+  font-size:13px;
+  white-space:nowrap
+}
+
+.botao-principal{
+  width:100%;
+  min-height:50px;
+  margin-top:20px;
+  border:none;
+  border-radius:9px;
+  background:#263238;
+  color:#fff;
+  font-size:14px;
+  font-weight:bold;
+  cursor:pointer
+}
+
+.botao-principal:hover{
+  background:#37474f
+}
+
+/* =========================================================
+   LISTA DE MATERIAIS
+========================================================= */
+
+.lista-materiais{
+  margin-top:30px
+}
+
+.cabecalho-lista{
+  margin-bottom:15px
+}
+
+.cabecalho-lista h2{
+  font-size:18px;
+  margin-bottom:5px
+}
+
+.cabecalho-lista p{
+  font-size:12px;
+  color:#727d86
+}
+
+ .acoes-lote-materiais{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  flex-wrap:wrap;
+  gap:10px;
+  margin:0 0 14px;
+  padding:10px 12px;
+  background:#f7f9fb;
+  border:1px solid #dfe5e8;
+  border-radius:9px
+}
+
+.selecionar-todos-materiais{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  color:#263238;
+  font-size:13px;
+  font-weight:600;
+  cursor:pointer
+}
+
+.selecionar-todos-materiais input,
+.checkbox-material-selecao{
+  width:17px;
+  height:17px;
+  margin:0;
+  accent-color:#263238;
+  cursor:pointer
+}
+
+.botao-excluir-selecionados{
+  min-height:34px;
+  padding:7px 11px;
+  border:1px solid #e0b7b7;
+  border-radius:7px;
+  background:#fff;
+  color:#a12626;
+  font-size:12px;
+  font-weight:600
+}
+
+.botao-excluir-selecionados:disabled{
+  opacity:.45;
+  cursor:not-allowed
+}
+
+.item-material{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:20px;
+  padding:14px 16px;
+  margin-bottom:10px;
+  background:#fff;
+  border:1px solid #dfe5e8;
+  border-radius:10px
+}
+
+.informacoes-material{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  flex:1;
+  min-width:0
+}
+
+.informacoes-material strong{
+  white-space:nowrap
+}
+
+.informacoes-material p{
+  margin:0;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  color:#5f6b73
+}
+
+.acoes-material{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  flex-shrink:0
+}
+
+.acoes-material button{
+  width:34px;
+  height:34px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border:1px solid #d5dce0;
+  border-radius:7px;
+  background:#fff;
+  cursor:pointer
+}
+
+.resumo-geral{
+  margin-top:15px;
+  padding:14px 16px;
+  background:#eef2f4;
+  border-radius:9px;
+  display:flex;
+  align-items:center;
+  gap:8px;
+  font-size:12px
+}
+
+/* =========================================================
+   PRÉ-VISUALIZAÇÃO
+========================================================= */
+
+.area-previsualizacao{
+  margin-top:40px;
+  background:#fff;
+  border:1px solid #dfe4e8;
+  border-radius:14px;
+  padding:28px
+}
+
+.cabecalho-preview{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  margin-bottom:28px
+}
+
+.eyebrow-preview{
+  display:block;
+  font-size:10px;
+  font-weight:bold;
+  letter-spacing:1px;
+  color:#89939b;
+  margin-bottom:6px
+}
+
+.cabecalho-preview h2{
+  font-size:20px;
+  margin-bottom:5px
+}
+
+.cabecalho-preview p{
+  font-size:12px;
+  color:#727d86
+}
+
+.botao-fechar-preview{
+  width:32px;
+  height:32px;
+  border:1px solid #dfe4e8;
+  background:#fff;
+  border-radius:7px;
+  font-size:21px;
+  cursor:pointer;
+  color:#68737c
+}
+
+.container-etiquetas{
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  gap:25px;
+  padding:25px;
+  background:#f1f3f5;
+  border-radius:10px;
+  max-height:700px;
+  overflow-y:auto
+}
+
+/* =========================================================
+   ETIQUETA
+========================================================= */
+
+.etiqueta{
+  position:relative;
+  background:#fff;
+  border:1px solid #202428;
+  color:#111;
+  display:flex;
+  flex-direction:column;
+  overflow:hidden;
+  flex-shrink:0;
+  box-shadow:0 3px 10px rgba(0,0,0,.08);
+  container-type:inline-size
+}
+
+.etiqueta-a4{
+  width:420px;
+  height:297px
+}
+
+.etiqueta-a5{
+  width:320px;
+  height:226px
+}
+
+.etiqueta-a6{
+  width:260px;
+  height:184px
+}
+
+/* =========================================================
+   CABEÇALHO DA ETIQUETA
+   LOGO À ESQUERDA / UNIDADE À DIREITA
+========================================================= */
+
+.etiqueta-cabecalho{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:18px;
+  padding:10px 22px 6px;
+  min-height:54px;
+  flex-shrink:0
+}
+
+.etiqueta-logo{
+  width:105px;
+  height:auto;
+  max-height:42px;
+  object-fit:contain;
+  object-position:left center;
+  display:block;
+  flex:0 0 auto
+}
+
+.etiqueta-unidade{
+  text-align:right;
+  line-height:1.05;
+  min-width:0;
+  max-width:58%;
+  margin-left:auto;
+  overflow-wrap:anywhere
+}
+
+.etiqueta-unidade strong{
+  display:block;
+  font-size:clamp(14px,3.8cqw,20px);
+  font-weight:800;
+  white-space:normal;
+  overflow-wrap:anywhere
+}
+
+/* =========================================================
+   CORPO DA ETIQUETA
+   MENOR / CENTRALIZADO / BORDA MAIS GROSSA
+========================================================= */
+
+.etiqueta-corpo{
+  width:82%;
+  align-self:center;
+  padding:16px 4.8cqw;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  gap:13px;
+  flex:0 0 64%;
+  min-height:0;
+  border:3px solid #111;
+  border-radius:12px;
+  margin:0 auto 12px
+}
+
+.linha-etiqueta{
+  display:grid;
+  grid-template-columns:max-content minmax(0,1fr);
+  align-items:baseline;
+  gap:9px;
+  line-height:1.15;
+  min-width:0
+}
+
+.linha-etiqueta .rotulo{
+  font-weight:800;
+  font-size:clamp(13px,3.4cqw,18px);
+  white-space:nowrap
+}
+
+.linha-etiqueta .valor{
+  font-weight:600;
+  font-size:clamp(13px,3.8cqw,20px);
+  word-break:break-word;
+  overflow-wrap:anywhere;
+  min-width:0
+}
+
+.linha-qtd{
+  margin-top:2px
+}
+
+.linha-qtd .rotulo{
+  font-size:clamp(14px,3.6cqw,19px)
+}
+
+.linha-qtd .valor{
+  font-size:clamp(17px,4.6cqw,24px);
+  font-weight:800
+}
+
+.numeracao-caixa{
+  position:absolute;
+  right:20px;
+  height: 20px;
+  bottom:25px;
+  font-size:15px !important;
+  font-weight:1000;
+  background:#fff;
+  padding:5px;
+  z-index:1
+}
+
+.acoes-preview{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:15px;
+  margin-top:20px
+}
+
+.botao-secundario{
+  height:45px;
+  padding:0 18px;
+  background:#fff;
+  border:1px solid #d5dbe0;
+  border-radius:8px;
+  color:#45515a;
+  font-size:13px;
+  cursor:pointer
+}
+
+.mensagem{
+  margin-top:15px;
+  padding:12px 15px;
+  border-radius:8px;
+  background:#fff4d8;
+  color:#6b5600;
+  font-size:12px;
+  display:none
+}
+/* =========================================================
+   AJUSTES SOMENTE DA PRÉ-VISUALIZAÇÃO
+   NÃO AFETA A IMPRESSÃO
+========================================================= */
+
+@media screen {
+
+  /* Retângulo interno um pouco mais largo */
+  #areaPreVisualizacao .etiqueta-corpo{
+    width:89%;
+  }
+
+  /* Letras um pouco menores */
+  #areaPreVisualizacao .linha-etiqueta .rotulo{
+    font-size:clamp(11px,3.1cqw,13px);
+  }
+
+  #areaPreVisualizacao .linha-etiqueta .valor{
+    font-size:clamp(12px,3.1cqw,13px);
+  }
+
+  #areaPreVisualizacao .linha-qtd .rotulo{
+    font-size:clamp(13px,3.1cqw,13px);
+  }
+
+  #areaPreVisualizacao .linha-qtd .valor{
+    font-size:clamp(13px,3.1cqw,13px);
+  }
+
+}
+
+/* =========================================================
+   IMPRESSÃO
+========================================================= */
+
+@media print{
+
+  @page{
+    margin:0;
+    size:auto
+  }
+
+  html,
+  body{
+    margin:0 !important;
+    padding:0 !important;
+    background:#fff !important;
+    width:100% !important;
+    min-height:0 !important
+  }
+
+  body *{
+    visibility:hidden !important
+  }
+
+  #areaPreVisualizacao,
+  #areaPreVisualizacao *{
+    visibility:visible !important
+  }
+
+  .pagina-manual{
+    display:block !important;
+    width:100% !important;
+    margin:0 !important;
+    padding:0 !important
+  }
+
+  .area-previsualizacao{
+    display:block !important;
+    position:absolute !important;
+    top:0 !important;
+    left:0 !important;
+    width:100% !important;
+    margin:0 !important;
+    padding:0 !important;
+    border:none !important;
+    border-radius:0 !important;
+    background:#fff !important;
+    box-shadow:none !important
+  }
+
+  .cabecalho-preview,
+  .acoes-preview{
+    display:none !important
+  }
+
+  .container-etiquetas{
+    display:grid !important;
+    gap:0 !important;
+    justify-content:start !important;
+    align-content:start !important;
+    width:297mm !important;
+    max-width:none !important;
+    max-height:none !important;
+    overflow:visible !important;
+    padding:0 !important;
+    margin:0 !important;
+    background:#fff !important;
+    border:none !important
+  }
+
+  /* A6 = 4 etiquetas por folha */
+  .container-etiquetas[data-tamanho="A6"]{
+    grid-template-columns:148.5mm 148.5mm !important;
+    grid-auto-rows:105mm !important
+  }
+
+  /* A5 = 2 etiquetas por folha */
+  .container-etiquetas[data-tamanho="A5"]{
+    width:210mm !important;
+    grid-template-columns:210mm !important;
+    grid-auto-rows:148.5mm !important
+  }
+
+  /* A4 = 1 etiqueta por folha */
+  .container-etiquetas[data-tamanho="A4"]{
+    width:297mm !important;
+    grid-template-columns:297mm !important;
+    grid-auto-rows:210mm !important
+  }
+
+  .etiqueta{
+    box-shadow:none !important;
+    break-inside:avoid !important;
+    page-break-inside:avoid !important;
+    margin:0 !important;
+    display:flex !important;
+    flex-direction:column !important
+  }
+
+  .etiqueta-a4{
+    width:297mm !important;
+    height:210mm !important
+  }
+
+  .etiqueta-a5{
+    width:210mm !important;
+    height:148.5mm !important
+  }
+
+  .etiqueta-a6{
+    width:148.5mm !important;
+    height:105mm !important
+  }
+
+  .container-etiquetas[data-tamanho="A4"] .etiqueta:not(:last-child){
+    break-after:page !important;
+    page-break-after:always !important
+  }
+
+  .container-etiquetas[data-tamanho="A5"] .etiqueta:nth-child(2n):not(:last-child){
+    break-after:page !important;
+    page-break-after:always !important
+  }
+
+  .container-etiquetas[data-tamanho="A6"] .etiqueta:nth-child(4n):not(:last-child){
+    break-after:page !important;
+    page-break-after:always !important
+  }
+
+  button{
+    display:none !important
+  }
+
+ /* =======================================================
+   GARANTIA DO LAYOUT NA IMPRESSÃO
+   ATENÇÃO:
+   Todas as alterações abaixo são exclusivas da impressão.
+   A pré-visualização permanece intacta.
+======================================================= */
+
+@media print {
+
+  /* -------------------------------------------------------
+     CABEÇALHO DA ETIQUETA
+     Logo à esquerda + nome da unidade à direita
+  ------------------------------------------------------- */
+
+  .etiqueta-cabecalho {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+
+    width: 100% !important;
+    box-sizing: border-box !important;
+
+    gap: 12px !important;
+    padding: 7px 16px 4px !important;
+
+    min-height: 100px !important;
+  }
+
+
+  /* Logo maior e presa ao lado esquerdo */
+
+  .etiqueta-logo {
+    width: 100px !important;
+    max-width: 170px !important;
+    height: 100 !important;
+    max-height: 80px !important;
+
+    object-fit: 100 !important;
+    object-position: 100 !important;
+
+    flex: 50 !important;
+  }
+
+
+  /* Nome da unidade maior e alinhado à direita */
+
+  .etiqueta-unidade {
+    text-align: 70 !important;
+
+    max-width: 80% !important;
+
+    margin-left: 70 !important;
+    margin-right: 100 !important;
+
+    line-height: 1 !important;
+
+    flex: 50 !important;
+  }
+
+
+  .etiqueta-unidade strong {
+    font-size: 30px !important;
+    line-height: 1 !important;
+
+    font-weight: 800 !important;
+  }
+
+
+  /* -------------------------------------------------------
+     RETÂNGULO PRINCIPAL
+     
+     Maior largura
+     Linha mais grossa
+     Centralizado horizontalmente
+     Posicionado mais para a parte inferior
+  ------------------------------------------------------- */
+
+  .etiqueta-corpo {
+    width: 90% !important;
+
+    box-sizing: 100 !important;
+
+    align-self: 100 !important;
+
+    /*
+      O "auto" no margin-top faz o retângulo descer
+      dentro da etiqueta, deixando-o predominantemente
+      na parte inferior.
+    */
+    margin-top: 90 !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    margin-bottom: 20px !important;
+
+    /*
+      Aumenta a altura ocupada pelo retângulo,
+      mas preserva espaço para o cabeçalho.
+    */
+    flex: 0 0 68% !important;
+
+    min-height: 0 !important;
+
+    padding: 13px 18px !important;
+
+    /*
+      Linha mais grossa
+    */
+    border: 4px solid #111 !important;
+
+    border-radius: 11px !important;
+
+    /*
+      Espaçamento entre as linhas
+    */
+    gap: 7px !important;
+
+    overflow: hidden !important;
+  }
+
+
+  /* -------------------------------------------------------
+     LINHAS DAS INFORMAÇÕES
+  ------------------------------------------------------- */
+
+  .linha-etiqueta {
+    display: grid !important;
+
+    grid-template-columns: max-content minmax(0, 1fr) !important;
+
+    align-items: baseline !important;
+
+    column-gap: 3px !important;
+
+    /*
+      Espaçamento vertical entre as informações
+    */
+    row-gap: 10px !important;
+
+    line-height: 3 !important;
+  }
+
+
+  /* -------------------------------------------------------
+     RÓTULOS
+     NOME:
+     LOTE:
+     VALIDADE:
+  ------------------------------------------------------- */
+
+  .linha-etiqueta .rotulo {
+    font-size: 24px !important;
+
+    line-height: 2 !important;
+
+    font-weight: 700 !important;
+
+    white-space: nowrap !important;
+  }
+
+
+  /* -------------------------------------------------------
+     VALORES / DESCRIÇÃO DO ITEM
+  ------------------------------------------------------- */
+
+  .linha-etiqueta .valor {
+    font-size: 24px !important;
+
+    line-height: 2 !important;
+
+    font-weight: 700 !important;
+
+    min-width: 0 !important;
+
+    /*
+      Permite que descrições maiores ocupem o espaço
+      disponível sem estourar o retângulo.
+    */
+    overflow-wrap: break-word !important;
+    word-break: normal !important;
+  }
+
+
+  /* -------------------------------------------------------
+     QUANTIDADE
+     Um pouco maior que as demais informações
+  ------------------------------------------------------- */
+
+  .linha-qtd .rotulo {
+    font-size: 24px !important;
+
+    line-height: 2 !important;
+
+    font-weight: 700 !important;
+  }
+
+
+  .linha-qtd .valor {
+    font-size: 24px !important;
+
+    line-height: 2 !important;
+
+    font-weight: 700 !important;
+  }
+
+
+  /* -------------------------------------------------------
+     NUMERAÇÃO DAS PÁGINAS / ETIQUETAS
+     
+     Mantém a posição atual, mas aumenta o tamanho.
+     
+     O código contempla os nomes de classe mais comuns
+     usados pelo sistema.
+  ------------------------------------------------------- */
+
+  /* Numeração real da caixa: 1/20, 2/20 etc. */
+  .numeracao-caixa {
+    font-size: 32px !important;
+    line-height: 1.1 !important;
+    font-weight: 900 !important;
+    white-space: nowrap !important;
+    height: auto !important;
+    min-height: 0 !important;
+    padding: 6px 8px !important;
+    right: 20px !important;
+    bottom: 25px !important;
+  }
+
+}
+
+/* =========================================================
+   RESPONSIVO
+========================================================= */
+
+@media(max-width:700px){
+
+  .cabecalho-sistema{
+    flex-direction:column;
+    align-items:stretch;
+    padding:15px 20px;
+    gap:15px
+  }
+
+  .cabecalho-esquerdo{
+    width:100%
+  }
+
+  .logo-sistema{
+    width:38px;
+    height:38px
+  }
+
+  .logo-elia{
+    width:125px;
+    max-height:36px
+  }
+
+  .titulo-sistema span{
+    font-size:9px
+  }
+
+  .seletor-unidade{
+    width:100%
+  }
+
+  .rotulo-unidade{
+    display:none
+  }
+
+  .botao-unidade,
+  .menu-unidades{
+    width:100%
+  }
+
+  .conteudo{
+    width:calc(100% - 30px);
+    padding-top:35px
+  }
+
+  .boas-vindas h1{
+    font-size:24px
+  }
+
+  .opcoes-entrada,
+  .grade-formulario,
+  .opcoes-tamanho{
+    grid-template-columns:1fr
+  }
+
+  .campo-grande{
+    grid-column:auto
+  }
+
+  .resumo-etiqueta{
+    align-items:flex-start;
+    flex-direction:column
+  }
+
+  .area-previsualizacao{
+    padding:18px
+  }
+
+  .container-etiquetas{
+    padding:15px
+  }
+
+  .etiqueta-a4{
+    width:330px;
+    height:233px
+  }
+
+  .etiqueta-a5{
+    width:290px;
+    height:205px
+  }
+
+  .etiqueta-a6{
+    width:250px;
+    height:177px
+  }
+
+  .acoes-preview{
+    flex-direction:column-reverse;
+    align-items:stretch
+  }
+
+  .botao-secundario{
+    width:100%
+  }
+
+  .item-material{
+    align-items:flex-start;
+    flex-direction:row;
+    gap:10px
+  }
+
+  .informacoes-material{
+    flex-direction:column;
+    align-items:flex-start
+  }
+
+  .acoes-lote-materiais{
+    align-items:flex-start;
+    flex-direction:column
+  }
+
+  .botao-excluir-selecionados{
+    width:100%
+  }
+
+  .informacoes-material,
+  .acoes-material{
+    width:100%
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header class="cabecalho-sistema">
+
+  <div class="cabecalho-esquerdo">
+
+    <img
+      src="logo-sistema/logo-elia.png"
+      alt="Isotipo ELIA"
+      class="logo-sistema"
+      id="logoSistema"
+    >
+
+    <div class="logo-fallback" id="logoFallback">
+      <span class="logo-fallback-mark">+</span>
+      <span>Rio Saúde</span>
+    </div>
+
+    <div class="titulo-sistema">
+
+      <img
+        src="logo-sistema/elia.png"
+        alt="ELIA"
+        class="logo-elia"
+        id="logoElia"
+      >
+
+      <span>
+        Etiquetagem e Lógica de Identificação e Armazenamento
+      </span>
+
+    </div>
+
+  </div>
+
+  <div class="seletor-unidade">
+
+    <span class="rotulo-unidade">
+      Unidade
+    </span>
+
+    <button
+      id="seletorUnidade"
+      class="botao-unidade"
+      type="button"
+    >
+      <span id="unidadeAtual">
+        UPA Del Castilho
+      </span>
+
+      <span class="seta-unidade">
+        ▾
+      </span>
+    </button>
+
+    <div
+      id="menuUnidades"
+      class="menu-unidades"
+    >
+
+      <button
+        type="button"
+        data-unidade="UPA Del Castilho"
+      >
+        UPA Del Castilho
+      </button>
+
+      <button
+        type="button"
+        data-unidade="UPA Madureira"
+      >
+        UPA Madureira
+      </button>
+
+      <button
+        type="button"
+        data-unidade="UPA Realengo"
+      >
+        UPA Realengo
+      </button>
+
+      <button
+        type="button"
+        data-unidade="Sede"
+      >
+        Sede
+      </button>
+
+    </div>
+
+  </div>
+
+</header>
+
+<main>
+
+<section
+  id="paginaInicial"
+  class="conteudo pagina-inicial"
+>
+
+  <div class="boas-vindas">
+
+    <h1>
+      Imprimir Etiquetas
+    </h1>
+
+    <p>
+      Escolha como deseja inserir as informações das suas etiquetas.
+    </p>
+
+  </div>
+
+  <section class="opcoes-entrada">
+
+    <button
+      class="card-opcao"
+      id="manualBtn"
+      type="button"
+    >
+
+      <div class="icone-opcao">
+        📝
+      </div>
+
+      <div>
+
+        <h2>
+          Inserir manualmente
+        </h2>
+
+        <p>
+          Preencha os dados das caixas diretamente no sistema.
+        </p>
+
+      </div>
+
+      <span class="seta-card">
+        ›
+      </span>
+
+    </button>
+
+    <button
+      class="card-opcao"
+      id="planilhaBtn"
+      type="button"
+    >
+
+      <div class="icone-opcao">
+        📊
+      </div>
+
+      <div>
+
+        <h2>
+          Importar planilha
+        </h2>
+
+        <p>
+          Importe várias caixas de uma só vez usando uma planilha.
+        </p>
+
+      </div>
+
+      <span class="seta-card">
+        ›
+      </span>
+
+    </button>
+
+    <input
+      type="file"
+      id="arquivoPlanilha"
+      accept=".xls,.xlsx,.csv,.txt"
+      hidden
+    >
+
+  </section>
+
+  <section class="informacao">
+
+    <div class="icone-info">
+      💡
+    </div>
+
+    <div>
+
+      <strong>
+        Como funciona?
+      </strong>
+
+      <p>
+        Cada caixa recebe duas etiquetas: uma para a frente e outra para a lateral.
+      </p>
+
+    </div>
+
+  </section>
+
+</section>
+
+
+<section
+  id="paginaManual"
+  class="conteudo pagina-manual"
+>
+
+  <div class="cabecalho-pagina">
+
+    <button
+      id="voltarManual"
+      class="botao-voltar"
+      type="button"
+    >
+      ← Voltar
+    </button>
+
+    <div>
+
+      <h1>
+        Nova etiqueta
+      </h1>
+
+      <p>
+        Preencha as informações da caixa.
+      </p>
+
+    </div>
+
+  </div>
+
+
+  <!-- =====================================================
+       BLOCO 1
+  ====================================================== -->
+
+  <section class="bloco-formulario">
+
+    <div class="titulo-bloco">
+
+      <span class="numero-bloco">
+        1
+      </span>
+
+      <div>
+
+        <h2>
+          Dados do produto
+        </h2>
+
+        <p>
+          Essas informações serão impressas na etiqueta.
+        </p>
+
+      </div>
+
+    </div>
+
+    <div class="grade-formulario">
+
+      <div class="campo campo-grande">
+
+        <label for="nomeProduto">
+          Nome do produto
+        </label>
+
+        <input
+          type="text"
+          id="nomeProduto"
+          placeholder="Ex.: Equipo Bureta Desc. 150ml"
+        >
+
+      </div>
+
+      <div class="campo">
+
+        <label for="lote">
+          Lote
+        </label>
+
+        <input
+          type="text"
+          id="lote"
+          placeholder="Ex.: E03-1"
+        >
+
+      </div>
+
+      <div class="campo">
+
+        <label for="validade">
+          Validade
+        </label>
+
+        <input
+          type="text"
+          id="validade"
+          placeholder="MM/AAAA"
+          maxlength="7"
+          inputmode="numeric"
+          autocomplete="off"
+        >
+
+      </div>
+
+      <div class="campo">
+
+        <label for="qtdProdutos">
+          Quantidade de produtos na caixa
+        </label>
+
+        <input
+          type="number"
+          id="qtdProdutos"
+          min="1"
+          placeholder="Ex.: 500"
+        >
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- =====================================================
+       BLOCO 2
+  ====================================================== -->
+
+  <section class="bloco-formulario">
+
+    <div class="titulo-bloco">
+
+      <span class="numero-bloco">
+        2
+      </span>
+
+      <div>
+
+        <h2>
+          Identificação das caixas
+        </h2>
+
+        <p>
+          Informe quantas caixas receberão etiquetas.
+        </p>
+
+      </div>
+
+    </div>
+
+    <div class="grade-formulario">
+
+      <div class="campo">
+
+        <label for="qtdCaixas">
+          Quantidade de caixas
+        </label>
+
+        <input
+          type="number"
+          id="qtdCaixas"
+          min="1"
+          placeholder="Ex.: 17"
+        >
+
+      </div>
+
+      <div class="campo">
+
+        <label>
+          Numerar caixas?
+        </label>
+
+        <div class="opcoes-radio">
+
+          <label class="radio-opcao">
+
+            <input
+              type="radio"
+              name="numerarCaixas"
+              value="nao"
+              checked
+            >
+
+            <span>
+              Não
+            </span>
+
+          </label>
+
+          <label class="radio-opcao">
+
+            <input
+              type="radio"
+              name="numerarCaixas"
+              value="sim"
+            >
+
+            <span>
+              Sim
+            </span>
+
+          </label>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <div
+      id="previsaoNumeracao"
+      class="previsao-numeracao"
+      style="display:none"
+    >
+
+      <span class="icone-previsao">
+        🔢
+      </span>
+
+      <div>
+
+        <strong>
+          Numeração das caixas
+        </strong>
+
+        <p id="textoNumeracao">
+          1/17 → 17/17
+        </p>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- =====================================================
+       BLOCO 3
+  ====================================================== -->
+
+  <section class="bloco-formulario">
+
+    <div class="titulo-bloco">
+
+      <span class="numero-bloco">
+        3
+      </span>
+
+      <div>
+
+        <h2>
+          Tamanho da etiqueta
+        </h2>
+
+        <p>
+          Escolha como as etiquetas serão organizadas na folha.
+        </p>
+
+      </div>
+
+    </div>
+
+    <div class="opcoes-tamanho">
+
+      <button
+        type="button"
+        class="card-tamanho"
+        data-tamanho="A4"
+      >
+
+        <div class="folha-preview folha-a4">
+
+          <div class="etiqueta-mini">
+            A4
+          </div>
+
+        </div>
+
+        <div class="informacao-tamanho">
+
+          <strong>
+            A4
+          </strong>
+
+          <span>
+            29,7 × 21 cm
+          </span>
+
+          <small>
+            1 etiqueta por folha
+          </small>
+
+        </div>
+
+      </button>
+
+
+      <button
+        type="button"
+        class="card-tamanho"
+        data-tamanho="A5"
+      >
+
+        <div class="folha-preview folha-a5">
+
+          <div class="etiqueta-mini">
+            A5
+          </div>
+
+          <div class="etiqueta-mini">
+            A5
+          </div>
+
+        </div>
+
+        <div class="informacao-tamanho">
+
+          <strong>
+            A5
+          </strong>
+
+          <span>
+            21 × 14,8 cm
+          </span>
+
+          <small>
+            2 etiquetas por folha
+          </small>
+
+        </div>
+
+      </button>
+
+
+      <button
+        type="button"
+        class="card-tamanho"
+        data-tamanho="A6"
+      >
+
+        <div class="folha-preview folha-a6">
+
+          <div class="etiqueta-mini">
+            A6
+          </div>
+
+          <div class="etiqueta-mini">
+            A6
+          </div>
+
+          <div class="etiqueta-mini">
+            A6
+          </div>
+
+          <div class="etiqueta-mini">
+            A6
+          </div>
+
+        </div>
+
+        <div class="informacao-tamanho">
+
+          <strong>
+            A6
+          </strong>
+
+          <span>
+            14,8 × 10,5 cm
+          </span>
+
+          <small>
+            4 etiquetas por folha
+          </small>
+
+        </div>
+
+      </button>
+
+    </div>
+
+    <input
+      type="hidden"
+      id="tamanhoSelecionado"
+      value=""
+    >
+
+  </section>
+
+
+  <!-- =====================================================
+       RESUMO
+  ====================================================== -->
+
+  <section
+    id="resumoEtiqueta"
+    class="resumo-etiqueta"
+  >
+
+    <div>
+
+      <strong>
+        Material atual
+      </strong>
+
+      <p>
+        Preencha os dados acima e clique em "+ Inserir" para adicionar este material à lista.
+      </p>
+
+    </div>
+
+    <span id="resumoQuantidade">
+      0 etiquetas
+    </span>
+
+  </section>
+
+
+  <button
+    id="adicionarMaterialBtn"
+    class="botao-principal"
+    type="button"
+  >
+    ＋ Inserir
+  </button>
+
+
+  <!-- =====================================================
+       LISTA DE MATERIAIS
+  ====================================================== -->
+
+  <section
+    id="listaMateriais"
+    class="lista-materiais"
+    style="display:none"
+  >
+
+    <div class="cabecalho-lista">
+
+      <h2>
+        Materiais adicionados
+      </h2>
+
+      <p>
+        Confira os materiais antes de gerar as etiquetas.
+      </p>
+
+    </div>
+
+    <div class="acoes-lote-materiais">
+      <label class="selecionar-todos-materiais">
+        <input id="selecionarTodosMateriais" type="checkbox">
+        <span>Selecionar tudo</span>
+      </label>
+
+      <button
+        id="excluirSelecionadosBtn"
+        class="botao-excluir-selecionados"
+        type="button"
+        disabled
+      >
+        🗑️ Excluir selecionados (<span id="quantidadeSelecionados">0</span>)
+      </button>
+    </div>
+
+    <div id="itensMateriais"></div>
+
+    <div
+      id="resumoGeral"
+      class="resumo-geral"
+    >
+
+      <strong id="resumoMateriais">
+        0 materiais
+      </strong>
+
+      <span>
+        •
+      </span>
+
+      <strong id="resumoCaixas">
+        0 caixas
+      </strong>
+
+      <span>
+        •
+      </span>
+
+      <strong id="resumoEtiquetas">
+        0 etiquetas
+      </strong>
+
+    </div>
+
+  </section>
+
+
+  <button
+    id="emitirBtn"
+    class="botao-principal botao-gerar"
+    type="button"
+  >
+    🏷️ Gerar etiquetas
+  </button>
+
+
+  <div
+    id="mensagem"
+    class="mensagem"
+  ></div>
+
+
+  <!-- =====================================================
+       PRÉ-VISUALIZAÇÃO
+  ====================================================== -->
+
+  <section
+    id="areaPreVisualizacao"
+    class="area-previsualizacao"
+    style="display:none"
+  >
+
+    <div class="cabecalho-preview">
+
+      <div>
+
+        <span class="eyebrow-preview">
+          PRÉ-VISUALIZAÇÃO
+        </span>
+
+        <h2>
+          Suas etiquetas
+        </h2>
+
+        <p>
+          Confira as informações antes de gerar o arquivo para impressão.
+        </p>
+
+      </div>
+
+      <button
+        id="fecharPreview"
+        class="botao-fechar-preview"
+        type="button"
+      >
+        ×
+      </button>
+
+    </div>
+
+
+    <div
+      id="containerEtiquetas"
+      class="container-etiquetas"
+    ></div>
+
+
+    <div class="acoes-preview">
+
+      <button
+        id="editarEtiquetas"
+        class="botao-secundario"
+        type="button"
+      >
+        ← Editar informações
+      </button>
+
+    </div>
+
+  </section>
+
+</section>
+
+</main>
+
+<footer>
+  Desenvolvido por Mariana Alves
+</footer>
+
+
+<script>
+
+document.addEventListener("DOMContentLoaded",()=>{
+
+  const $ = id => document.getElementById(id);
+
+  const paginaInicial = $("paginaInicial");
+  const paginaManual = $("paginaManual");
+  const menuUnidades = $("menuUnidades");
+  const unidadeAtual = $("unidadeAtual");
+
+  const materiais = [];
+
+  let etiquetasGeradas = [];
+
+
+  /* ========================================================
+     MENSAGENS
+  ======================================================== */
+
+  function mostrarMensagem(texto){
+
+    const box = $("mensagem");
+
+    box.textContent = texto;
+    box.style.display = "block";
+
+    clearTimeout(window._msgTimer);
+
+    window._msgTimer = setTimeout(
+      () => box.style.display = "none",
+      5000
+    );
+
+  }
+
+
+  /* ========================================================
+     NAVEGAÇÃO
+  ======================================================== */
+
+  function abrirManual(){
+
+    paginaInicial.style.display = "none";
+
+    paginaManual.style.display = "block";
+
+    window.scrollTo({
+      top:0,
+      behavior:"smooth"
+    });
+
+  }
+
+
+  function voltarInicio(){
+
+    paginaManual.style.display = "none";
+
+    paginaInicial.style.display = "block";
+
+    $("areaPreVisualizacao").style.display = "none";
+
+    window.scrollTo({
+      top:0,
+      behavior:"smooth"
+    });
+
+  }
+
+
+  $("manualBtn").addEventListener(
+    "click",
+    abrirManual
+  );
+
+
+  $("voltarManual").addEventListener(
+    "click",
+    voltarInicio
+  );
+
+
+  /* ========================================================
+     UNIDADES
+  ======================================================== */
+
+  $("seletorUnidade").addEventListener(
+    "click",
+    e => {
+
+      e.stopPropagation();
+
+      menuUnidades.classList.toggle("aberto");
+
+    }
+  );
+
+
+  menuUnidades
+    .querySelectorAll("button")
+    .forEach(btn => {
+
+      btn.addEventListener(
+        "click",
+        () => {
+
+          unidadeAtual.textContent =
+            btn.dataset.unidade;
+
+          menuUnidades.classList.remove(
+            "aberto"
+          );
+
+          atualizarResumoAtual();
+
+        }
+      );
+
+    });
+
+
+  document.addEventListener(
+    "click",
+    e => {
+
+      if(
+        !e.target.closest(".seletor-unidade")
+      ){
+
+        menuUnidades.classList.remove(
+          "aberto"
+        );
+
+      }
+
+    }
+  );
+
+
+  /* ========================================================
+     LOGOS
+  ======================================================== */
+
+  $("logoSistema").addEventListener(
+    "error",
+    function(){
+
+      this.style.display = "none";
+
+      $("logoFallback").style.display =
+        "flex";
+
+    }
+  );
+
+
+  $("logoElia").addEventListener(
+    "error",
+    function(){
+
+      this.style.display = "none";
+
+    }
+  );
+
+
+  /* ========================================================
+     VALIDADE
+  ======================================================== */
+
+  $("validade").addEventListener(
+    "input",
+    function(){
+
+      let v =
+        this.value
+          .replace(/\D/g,"")
+          .slice(0,6);
+
+      if(v.length > 2){
+
+        v =
+          v.slice(0,2) +
+          "/" +
+          v.slice(2);
+
+      }
+
+      this.value = v;
+
+    }
+  );
+
+
+  /* ========================================================
+     NUMERAÇÃO
+  ======================================================== */
+
+  document
+    .querySelectorAll(
+      'input[name="numerarCaixas"]'
+    )
+    .forEach(
+      radio => {
+
+        radio.addEventListener(
+          "change",
+          atualizarPrevisao
+        );
+
+      }
+    );
+
+
+  $("qtdCaixas").addEventListener(
+    "input",
+    () => {
+
+      atualizarPrevisao();
+      atualizarResumoAtual();
+
+    }
+  );
+
+
+  $("qtdProdutos").addEventListener(
+    "input",
+    atualizarResumoAtual
+  );
+
+
+  function atualizarPrevisao(){
+
+    const qtd =
+      Math.max(
+        0,
+        parseInt(
+          $("qtdCaixas").value,
+          10
+        ) || 0
+      );
+
+
+    const sim =
+      document.querySelector(
+        'input[name="numerarCaixas"]:checked'
+      )?.value === "sim";
+
+
+    $("previsaoNumeracao").style.display =
+      sim && qtd > 0
+        ? "flex"
+        : "none";
+
+
+    if(sim && qtd > 0){
+
+      $("textoNumeracao").textContent =
+        `1/${qtd} → ${qtd}/${qtd}`;
+
+    }
+
+  }
+
+
+  /* ========================================================
+     TAMANHO
+  ======================================================== */
+
+  document
+    .querySelectorAll(".card-tamanho")
+    .forEach(card => {
+
+      card.addEventListener(
+        "click",
+        () => {
+
+          document
+            .querySelectorAll(".card-tamanho")
+            .forEach(
+              c =>
+                c.classList.remove(
+                  "selecionado"
+                )
+            );
+
+
+          card.classList.add(
+            "selecionado"
+          );
+
+
+          $("tamanhoSelecionado").value =
+            card.dataset.tamanho;
+
+
+          atualizarResumoAtual();
+
+        }
+      );
+
+    });
+
+
+  /* ========================================================
+     DADOS DO FORMULÁRIO
+  ======================================================== */
+
+  function obterDadosFormulario(){
+
+    return {
+
+      nomeProduto:
+        $("nomeProduto")
+          .value
+          .trim(),
+
+      lote:
+        $("lote")
+          .value
+          .trim(),
+
+      validade:
+        $("validade")
+          .value
+          .trim(),
+
+      qtdProdutos:
+        Math.max(
+          0,
+          parseInt(
+            $("qtdProdutos").value,
+            10
+          ) || 0
+        ),
+
+      qtdCaixas:
+        Math.max(
+          0,
+          parseInt(
+            $("qtdCaixas").value,
+            10
+          ) || 0
+        ),
+
+      numerar:
+        document.querySelector(
+          'input[name="numerarCaixas"]:checked'
+        )?.value === "sim",
+
+      tamanho:
+        $("tamanhoSelecionado").value,
+
+      unidade:
+        unidadeAtual
+          .textContent
+          .trim()
+
+    };
+
+  }
+
+
+  function atualizarResumoAtual(){
+
+    const d =
+      obterDadosFormulario();
+
+    const quantidade =
+      d.qtdCaixas * 2;
+
+    $("resumoQuantidade").textContent =
+      quantidade +
+      (
+        quantidade === 1
+          ? " etiqueta"
+          : " etiquetas"
+      );
+
+  }
+
+
+  /* ========================================================
+     VALIDAÇÃO
+  ======================================================== */
+
+  function validarDados(d){
+
+    if(!d.nomeProduto)
+      return "Informe o nome do produto.";
+
+    if(!d.lote)
+      return "Informe o lote.";
+
+    if(!/^\d{2}\/\d{4}$/.test(d.validade))
+      return "Informe a validade no formato MM/AAAA.";
+
+    if(d.qtdProdutos < 1)
+      return "Informe a quantidade de produtos na caixa.";
+
+    if(d.qtdCaixas < 1)
+      return "Informe a quantidade de caixas.";
+
+    if(!d.tamanho)
+      return "Escolha o tamanho da etiqueta.";
+
+    return "";
+
+  }
+
+
+  /* ========================================================
+     ESCAPAR HTML
+  ======================================================== */
+
+  function escapar(texto){
+
+    return String(texto ?? "")
+      .replace(
+        /[&<>"']/g,
+        c => ({
+          "&":"&amp;",
+          "<":"&lt;",
+          ">":"&gt;",
+          '"':"&quot;",
+          "'":"&#039;"
+        }[c])
+      );
+
+  }
+
+
+  /* ========================================================
+     LISTA DE MATERIAIS
+  ======================================================== */
+
+  const materiaisSelecionados = new Set();
+
+  function atualizarControlesSelecao(){
+    const total = materiais.length;
+    const selecionados = materiaisSelecionados.size;
+    const selecionarTodos = $("selecionarTodosMateriais");
+    const excluirSelecionados = $("excluirSelecionadosBtn");
+    const quantidade = $("quantidadeSelecionados");
+
+    if(quantidade){
+      quantidade.textContent = selecionados;
+    }
+    if(excluirSelecionados){
+      excluirSelecionados.disabled = selecionados === 0;
+    }
+    if(selecionarTodos){
+      selecionarTodos.checked = total > 0 && selecionados === total;
+      selecionarTodos.indeterminate = selecionados > 0 && selecionados < total;
+      selecionarTodos.disabled = total === 0;
+    }
+  }
+
+  function excluirMateriaisSelecionados(){
+    if(!materiaisSelecionados.size) return;
+
+    const indices = Array.from(materiaisSelecionados).sort((a,b) => b-a);
+    indices.forEach(index => {
+      if(index >= 0 && index < materiais.length){
+        materiais.splice(index, 1);
+      }
+    });
+
+    materiaisSelecionados.clear();
+    atualizarLista();
+  }
+
+  function atualizarLista(){
+
+    const lista =
+      $("listaMateriais");
+
+    const box =
+      $("itensMateriais");
+
+    const selecionarTodos = $("selecionarTodosMateriais");
+    const excluirSelecionados = $("excluirSelecionadosBtn");
+
+    if(selecionarTodos && !selecionarTodos.dataset.eventoConfigurado){
+      selecionarTodos.dataset.eventoConfigurado = "1";
+      selecionarTodos.onchange = () => {
+        materiaisSelecionados.clear();
+        if(selecionarTodos.checked){
+          materiais.forEach((m,index) => materiaisSelecionados.add(index));
+        }
+        atualizarLista();
+      };
+    }
+
+    if(excluirSelecionados && !excluirSelecionados.dataset.eventoConfigurado){
+      excluirSelecionados.dataset.eventoConfigurado = "1";
+      excluirSelecionados.onclick = excluirMateriaisSelecionados;
+    }
+
+    box.innerHTML = "";
+
+
+    if(!materiais.length){
+
+      lista.style.display = "none";
+      materiaisSelecionados.clear();
+      atualizarControlesSelecao();
+
+      return;
+
+    }
+
+
+    lista.style.display = "block";
+
+
+    materiais.forEach(
+      (m,index) => {
+
+        const item =
+          document.createElement("div");
+
+        item.className =
+          "item-material";
+
+
+        const selecao =
+          document.createElement("input");
+
+        selecao.type = "checkbox";
+        selecao.className = "checkbox-material-selecao";
+        selecao.setAttribute("aria-label", "Selecionar " + m.nomeProduto);
+        selecao.checked = materiaisSelecionados.has(index);
+        selecao.onchange = () => {
+          if(selecao.checked){
+            materiaisSelecionados.add(index);
+          }else{
+            materiaisSelecionados.delete(index);
+          }
+          atualizarControlesSelecao();
+        };
+
+        const info =
+          document.createElement("div");
+
+        info.className =
+          "informacoes-material";
+
+
+        info.innerHTML =
+          "<strong>" +
+          escapar(m.nomeProduto) +
+          "</strong>" +
+
+          "<p>" +
+          "Lote: " +
+          escapar(m.lote) +
+          " • Validade: " +
+          escapar(m.validade) +
+          " • " +
+          m.qtdCaixas +
+          " caixa(s) • " +
+          m.tamanho +
+          "</p>";
+
+
+        const acoes =
+          document.createElement("div");
+
+        acoes.className =
+          "acoes-material";
+
+
+        const editar =
+          document.createElement("button");
+
+        editar.type = "button";
+        editar.title = "Editar";
+        editar.textContent = "✏️";
+
+
+        editar.onclick =
+          () => editarMaterial(index);
+
+
+        const remover =
+          document.createElement("button");
+
+        remover.type = "button";
+        remover.title = "Remover";
+        remover.textContent = "🗑️";
+
+
+        remover.onclick =
+          () => {
+
+            materiais.splice(
+              index,
+              1
+            );
+
+            atualizarLista();
+
+          };
+
+
+        acoes.append(
+          editar,
+          remover
+        );
+
+
+        item.append(
+          selecao,
+          info,
+          acoes
+        );
+
+
+        box.appendChild(item);
+
+      }
+    );
+
+
+    const caixas =
+      materiais.reduce(
+        (s,m) =>
+          s + m.qtdCaixas,
+        0
+      );
+
+
+    const etiquetas =
+      caixas * 2;
+
+
+    $("resumoMateriais").textContent =
+      materiais.length +
+      (
+        materiais.length === 1
+          ? " material"
+          : " materiais"
+      );
+
+
+    $("resumoCaixas").textContent =
+      caixas +
+      (
+        caixas === 1
+          ? " caixa"
+          : " caixas"
+      );
+
+
+    $("resumoEtiquetas").textContent =
+      etiquetas +
+      (
+        etiquetas === 1
+          ? " etiqueta"
+          : " etiquetas"
+      );
+
+    atualizarControlesSelecao();
+
+  }
+
+
+  /* ========================================================
+     EDITAR MATERIAL
+  ======================================================== */
+
+  function editarMaterial(index){
+
+    const m =
+      materiais[index];
+
+
+    $("nomeProduto").value =
+      m.nomeProduto;
+
+    $("lote").value =
+      m.lote;
+
+    $("validade").value =
+      m.validade;
+
+    $("qtdProdutos").value =
+      m.qtdProdutos;
+
+    $("qtdCaixas").value =
+      m.qtdCaixas;
+
+
+    document.querySelector(
+      `input[name="numerarCaixas"][value="${m.numerar ? "sim" : "nao"}"]`
+    ).checked = true;
+
+
+    document
+      .querySelectorAll(".card-tamanho")
+      .forEach(
+        c =>
+          c.classList.toggle(
+            "selecionado",
+            c.dataset.tamanho === m.tamanho
+          )
+      );
+
+
+    $("tamanhoSelecionado").value =
+      m.tamanho;
+
+
+    materiais.splice(
+      index,
+      1
+    );
+
+
+    atualizarLista();
+    atualizarPrevisao();
+    atualizarResumoAtual();
+
+
+    window.scrollTo({
+      top:0,
+      behavior:"smooth"
+    });
+
+  }
+
+
+  /* ========================================================
+     LIMPAR FORMULÁRIO
+  ======================================================== */
+
+  function limparFormulario(){
+
+    [
+      "nomeProduto",
+      "lote",
+      "validade",
+      "qtdProdutos",
+      "qtdCaixas"
+    ]
+    .forEach(
+      id =>
+        $(id).value = ""
+    );
+
+
+    document.querySelector(
+      'input[name="numerarCaixas"][value="nao"]'
+    ).checked = true;
+
+
+    document
+      .querySelectorAll(".card-tamanho")
+      .forEach(
+        c =>
+          c.classList.remove(
+            "selecionado"
+          )
+      );
+
+
+    $("tamanhoSelecionado").value = "";
+
+
+    $("previsaoNumeracao").style.display =
+      "none";
+
+
+    atualizarResumoAtual();
+
+  }
+
+
+  /* ========================================================
+     ADICIONAR MATERIAL
+  ======================================================== */
+
+  $("adicionarMaterialBtn").addEventListener(
+    "click",
+    () => {
+
+      const d =
+        obterDadosFormulario();
+
+      const erro =
+        validarDados(d);
+
+
+      if(erro){
+
+        mostrarMensagem(erro);
+
+        return;
+
+      }
+
+
+      materiais.push(d);
+
+      atualizarLista();
+
+      limparFormulario();
+
+      mostrarMensagem(
+        "Material adicionado à lista."
+      );
+
+    }
+  );
+
+
+  /* ========================================================
+     GERAR ETIQUETAS
+  ======================================================== */
+
+  $("emitirBtn").addEventListener(
+    "click",
+    () => {
+
+      if(!materiais.length){
+
+        const d =
+          obterDadosFormulario();
+
+        const erro =
+          validarDados(d);
+
+
+        if(erro){
+
+          mostrarMensagem(
+            "Adicione pelo menos um material antes de gerar as etiquetas."
+          );
+
+          return;
+
+        }
+
+
+        materiais.push(d);
+
+        atualizarLista();
+
+        limparFormulario();
+
+      }
+
+
+      gerarVisualizacao();
+
+    }
+  );
+
+
+  function gerarVisualizacao(){
+
+    etiquetasGeradas = [];
+
+
+    /*
+     * Cada caixa gera DUAS etiquetas:
+     * uma frente e uma lateral.
+     */
+
+    materiais.forEach(
+      m => {
+
+        for(
+          let i = 1;
+          i <= m.qtdCaixas;
+          i++
+        ){
+
+          etiquetasGeradas.push({
+            ...m,
+            numero:i,
+            lado:"frente"
+          });
+
+
+          etiquetasGeradas.push({
+            ...m,
+            numero:i,
+            lado:"lateral"
+          });
+
+        }
+
+      }
+    );
+
+
+    const container =
+      $("containerEtiquetas");
+
+
+    container.innerHTML = "";
+
+
+    const tamanhosGerados =
+      [
+        ...new Set(
+          etiquetasGeradas.map(
+            e => e.tamanho
+          )
+        )
+      ];
+
+
+    container.dataset.tamanho =
+      tamanhosGerados.length === 1
+        ? tamanhosGerados[0]
+        : "";
+
+
+    etiquetasGeradas.forEach(
+      e => {
+
+        const etiqueta =
+          document.createElement("div");
+
+
+        etiqueta.className =
+          "etiqueta etiqueta-" +
+          e.tamanho.toLowerCase();
+
+
+        /* ==================================================
+           CABEÇALHO
+        ================================================== */
+
+        const cab =
+          document.createElement("div");
+
+        cab.className =
+          "etiqueta-cabecalho";
+
+
+        const logo =
+          document.createElement("img");
+
+        logo.className =
+          "etiqueta-logo";
+
+        logo.src =
+          "assets/logo-rio-saude.png";
+
+        logo.alt =
+          "RIO SAÚDE";
+
+
+        logo.onerror =
+          function(){
+
+            this.style.display = "none";
+
+          };
+
+
+        const uni =
+          document.createElement("div");
+
+        uni.className =
+          "etiqueta-unidade";
+
+
+        uni.innerHTML =
+          "<strong>" +
+          escapar(e.unidade) +
+          "</strong>";
+
+
+        /*
+         * A logo entra primeiro,
+         * portanto fica à esquerda.
+         *
+         * A unidade entra depois,
+         * alinhada à direita pelo CSS.
+         */
+
+        cab.append(
+          logo,
+          uni
+        );
+
+
+        /* ==================================================
+           CORPO
+        ================================================== */
+
+        const corpo =
+          document.createElement("div");
+
+        corpo.className =
+          "etiqueta-corpo";
+
+
+        corpo.innerHTML =
+
+          '<div class="linha-etiqueta">' +
+
+            '<span class="rotulo">' +
+              'NOME:' +
+            '</span>' +
+
+            '<span class="valor">' +
+              escapar(e.nomeProduto) +
+            '</span>' +
+
+          '</div>' +
+
+
+          '<div class="linha-etiqueta">' +
+
+            '<span class="rotulo">' +
+              'LOTE:' +
+            '</span>' +
+
+            '<span class="valor">' +
+              escapar(e.lote) +
+            '</span>' +
+
+          '</div>' +
+
+
+          '<div class="linha-etiqueta">' +
+
+            '<span class="rotulo">' +
+              'VALIDADE:' +
+            '</span>' +
+
+            '<span class="valor">' +
+              escapar(e.validade) +
+            '</span>' +
+
+          '</div>' +
+
+
+          '<div class="linha-etiqueta linha-qtd">' +
+
+            '<span class="rotulo">' +
+              'QTD:' +
+            '</span>' +
+
+            '<span class="valor">' +
+              e.qtdProdutos +
+            '</span>' +
+
+          '</div>';
+
+
+        etiqueta.append(
+          cab,
+          corpo
+        );
+
+
+        /* ==================================================
+           NUMERAÇÃO
+        ================================================== */
+
+        if(e.numerar){
+
+          const num =
+            document.createElement("div");
+
+
+          num.className =
+            "numeracao-caixa";
+
+
+          num.textContent =
+            e.numero +
+            "/" +
+            e.qtdCaixas;
+
+
+          etiqueta.appendChild(
+            num
+          );
+
+        }
+
+
+        container.appendChild(
+          etiqueta
+        );
+
+      }
+    );
+
+
+    $("areaPreVisualizacao").style.display =
+      "block";
+
+
+    $("areaPreVisualizacao").scrollIntoView({
+      behavior:"smooth",
+      block:"start"
+    });
+
+  }
+
+
+  /* ========================================================
+     FECHAR / EDITAR PRÉ-VISUALIZAÇÃO
+  ======================================================== */
+
+  $("fecharPreview").addEventListener(
+    "click",
+    () => {
+
+      $("areaPreVisualizacao").style.display =
+        "none";
+
+    }
+  );
+
+
+  $("editarEtiquetas").addEventListener(
+    "click",
+    () => {
+
+      $("areaPreVisualizacao").style.display =
+        "none";
+
+    }
+  );
+
+
+  /* ========================================================
+     IMPORTAÇÃO DE PLANILHA
+  ======================================================== */
+
+  $("planilhaBtn").addEventListener(
+    "click",
+    () =>
+      $("arquivoPlanilha").click()
+  );
+
+
+  $("arquivoPlanilha").addEventListener(
+    "change",
+    async function(){
+
+      const arquivo =
+        this.files[0];
+
+
+      if(!arquivo)
+        return;
+
+
+      try{
+
+        const nomeArquivo =
+          arquivo.name.toLowerCase();
+
+
+        if(
+          nomeArquivo.endsWith(".xls") ||
+          nomeArquivo.endsWith(".xlsx")
+        ){
+
+          if(
+            typeof XLSX === "undefined"
+          ){
+
+            mostrarMensagem(
+              "A biblioteca para leitura de Excel não foi carregada. Verifique sua conexão com a internet."
+            );
+
+            return;
+
+          }
+
+
+          const dados =
+            await arquivo.arrayBuffer();
+
+
+          const workbook =
+            XLSX.read(
+              dados,
+              {
+                type:"array",
+                cellDates:true
+              }
+            );
+
+
+          const nomeAba =
+            workbook.SheetNames[0];
+
+
+          const planilha =
+            workbook.Sheets[nomeAba];
+
+
+          const linhas =
+            XLSX.utils.sheet_to_json(
+              planilha,
+              {
+                header:1,
+                defval:"",
+                raw:true
+              }
+            );
+
+
+          importarExcel(linhas);
+
+        }
+        else{
+
+          const texto =
+            await arquivo.text();
+
+          importarCSV(texto);
+
+        }
+
+      }
+      catch(e){
+
+        console.error(e);
+
+        mostrarMensagem(
+          "Não foi possível ler a planilha. Verifique se o arquivo está correto."
+        );
+
+      }
+      finally{
+
+        this.value = "";
+
+      }
+
+    }
+  );
+
+
+  /* ========================================================
+     NORMALIZAÇÃO
+  ======================================================== */
+
+  function normalizar(s){
+
+    return String(s ?? "")
+      .normalize("NFD")
+      .replace(
+        /[\u0300-\u036f]/g,
+        ""
+      )
+      .toLowerCase()
+      .replace(
+        /[^a-z0-9]/g,
+        ""
+      );
+
+  }
+
+
+  /* ========================================================
+     CONVERSÃO DE NÚMEROS
+  ======================================================== */
+
+  function converterNumero(valor){
+
+    if(
+      typeof valor === "number"
+    ){
+
+      return Math.max(
+        0,
+        Math.round(valor)
+      );
+
+    }
+
+
+    let texto =
+      String(valor ?? "")
+        .trim()
+        .replace(/\s/g,"");
+
+
+    if(!texto)
+      return 0;
+
+
+    if(
+      texto.includes(",") &&
+      texto.includes(".")
+    ){
+
+      texto =
+        texto
+          .replace(/\./g,"")
+          .replace(",",".");
+    }
+    else if(
+      texto.includes(",")
+    ){
+
+      texto =
+        texto.replace(",",".");
+    }
+
+
+    const numero =
+      Number(texto);
+
+
+    return Number.isFinite(numero)
+      ? Math.max(
+          0,
+          Math.round(numero)
+        )
+      : 0;
+
+  }
+
+
+  /* ========================================================
+     CONVERSÃO DE VALIDADE
+  ======================================================== */
+
+  function formatarValidadeExcel(valor){
+
+    if(
+      valor instanceof Date &&
+      !isNaN(valor.getTime())
+    ){
+
+      const mes =
+        String(
+          valor.getMonth() + 1
+        ).padStart(2,"0");
+
+
+      return (
+        mes +
+        "/" +
+        valor.getFullYear()
+      );
+
+    }
+
+
+    if(
+      typeof valor === "number" &&
+      Number.isFinite(valor)
+    ){
+
+      try{
+
+        const data =
+          XLSX.SSF.parse_date_code(
+            valor
+          );
+
+
+        if(
+          data &&
+          data.y &&
+          data.m
+        ){
+
+          return (
+            String(data.m)
+              .padStart(2,"0") +
+            "/" +
+            data.y
+          );
+
+        }
+
+      }
+      catch(e){}
+
+
+      return String(valor);
+
+    }
+
+
+    let texto =
+      String(valor ?? "")
+        .trim();
+
+
+    if(!texto)
+      return "";
+
+
+    if(
+      /^\d{2}\/\d{4}$/.test(texto)
+    ){
+
+      return texto;
+
+    }
+
+
+    if(
+      /^\d+(\.\d+)?$/.test(texto)
+    ){
+
+      try{
+
+        const data =
+          XLSX.SSF.parse_date_code(
+            Number(texto)
+          );
+
+
+        if(
+          data &&
+          data.y &&
+          data.m
+        ){
+
+          return (
+            String(data.m)
+              .padStart(2,"0") +
+            "/" +
+            data.y
+          );
+
+        }
+
+      }
+      catch(e){}
+
+    }
+
+
+    return texto;
+
+  }
+
+
+  /* ========================================================
+     ALIASES DA PLANILHA
+  ======================================================== */
+
+  const aliases = {
+
+    nomeproduto:[
+      "nomeproduto",
+      "nome",
+      "produto",
+      "nomedoproduto"
+    ],
+
+    lote:[
+      "lote"
+    ],
+
+    validade:[
+      "validade"
+    ],
+
+    qtdprodutos:[
+      "qtdprodutos",
+      "quantidade",
+      "quantidadedeprodutosnacaixa"
+    ],
+
+    qtdcaixas:[
+      "qtdcaixas",
+      "caixas",
+      "quantidadedecaixas"
+    ],
+
+    numerar:[
+      "numerar",
+      "numerarcaixas"
+    ],
+
+    tamanho:[
+      "tamanho",
+      "tamanhodaetiqueta"
+    ],
+
+    unidade:[
+      "unidade"
+    ]
+
+  };
+
+
+  /* ========================================================
+     IMPORTAÇÃO PADRONIZADA
+  ======================================================== */
+
+  function importarMatriz(
+    cabecalhos,
+    linhas
+  ){
+
+    const hs =
+      cabecalhos.map(
+        normalizar
+      );
+
+
+    const indice = {};
+
+
+    Object.keys(aliases)
+      .forEach(
+        campo => {
+
+          indice[campo] =
+            hs.findIndex(
+              h =>
+                aliases[campo]
+                  .includes(h)
+            );
+
+        }
+      );
+
+
+    if(
+      indice.nomeproduto < 0 ||
+      indice.qtdcaixas < 0
+    ){
+
+      mostrarMensagem(
+        "Cabeçalhos não reconhecidos. Use pelo menos: NomeProduto e QtdCaixas."
+      );
+
+      return;
+
+    }
+
+
+    let adicionados = 0;
+
+
+    linhas.forEach(
+      valores => {
+
+        const get =
+          campo =>
+            indice[campo] >= 0
+              ? String(
+                  valores[
+                    indice[campo]
+                  ] ?? ""
+                ).trim()
+              : "";
+
+
+        const m = {
+
+          nomeProduto:
+            get("nomeproduto"),
+
+          lote:
+            get("lote"),
+
+          validade:
+            formatarValidadeExcel(
+              get("validade")
+            ),
+
+          qtdProdutos:
+            converterNumero(
+              get("qtdprodutos")
+            ),
+
+          qtdCaixas:
+            converterNumero(
+              get("qtdcaixas")
+            ),
+
+          numerar:
+            /^(sim|s|1|true)$/i.test(
+              get("numerar")
+            ),
+
+          tamanho:
+            (
+              get("tamanho") ||
+              "A4"
+            )
+            .trim()
+            .toUpperCase(),
+
+          unidade:
+            get("unidade") ||
+            unidadeAtual.textContent.trim()
+
+        };
+
+
+        if(
+          ![
+            "A4",
+            "A5",
+            "A6"
+          ].includes(
+            m.tamanho
+          )
+        ){
+
+          m.tamanho =
+            "A4";
+
+        }
+
+
+        if(
+          m.nomeProduto &&
+          m.qtdCaixas > 0
+        ){
+
+          materiais.push(m);
+
+          adicionados++;
+
+        }
+
+      }
+    );
+
+
+    if(!adicionados){
+
+      mostrarMensagem(
+        "Nenhuma linha válida foi encontrada na planilha."
+      );
+
+      return;
+
+    }
+
+
+    abrirManual();
+
+    atualizarLista();
+
+
+    mostrarMensagem(
+      adicionados +
+      (
+        adicionados === 1
+          ? " material importado."
+          : " materiais importados."
+      )
+    );
+
+  }
+
+
+  /* ========================================================
+     IMPORTAÇÃO EXCEL
+  ======================================================== */
+
+  function importarExcel(linhas){
+
+    if(
+      !linhas ||
+      linhas.length < 2
+    ){
+
+      mostrarMensagem(
+        "A planilha precisa ter uma linha de cabeçalho e pelo menos uma linha de dados."
+      );
+
+      return;
+
+    }
+
+
+    importarMatriz(
+      linhas[0],
+      linhas.slice(1)
+    );
+
+  }
+
+
+  /* ========================================================
+     DIVIDIR CSV
+  ======================================================== */
+
+  function dividirCSV(
+    linha,
+    separador
+  ){
+
+    const resultado = [];
+
+    let atual = "";
+
+    let aspas = false;
+
+
+    for(
+      let i = 0;
+      i < linha.length;
+      i++
+    ){
+
+      const c =
+        linha[i];
+
+
+      if(c === '"'){
+
+        if(
+          aspas &&
+          linha[i + 1] === '"'
+        ){
+
+          atual += '"';
+
+          i++;
+
+        }
+        else{
+
+          aspas =
+            !aspas;
+
+        }
+
+      }
+      else if(
+        c === separador &&
+        !aspas
+      ){
+
+        resultado.push(
+          atual
+        );
+
+        atual = "";
+
+      }
+      else{
+
+        atual += c;
+
+      }
+
+    }
+
+
+    resultado.push(
+      atual
+    );
+
+
+    return resultado;
+
+  }
+
+
+  /* ========================================================
+     IMPORTAÇÃO CSV
+  ======================================================== */
+
+  function importarCSV(texto){
+
+    const linhas =
+      texto
+        .split(/\r?\n/)
+        .map(
+          l => l.trim()
+        )
+        .filter(Boolean);
+
+
+    if(
+      linhas.length < 2
+    ){
+
+      mostrarMensagem(
+        "A planilha precisa ter uma linha de cabeçalho e pelo menos uma linha de dados."
+      );
+
+      return;
+
+    }
+
+
+    const separador =
+      linhas[0].includes(";")
+        ? ";"
+        : ",";
+
+
+    const cabecalhos =
+      dividirCSV(
+        linhas[0],
+        separador
+      );
+
+
+    const dados =
+      linhas
+        .slice(1)
+        .map(
+          linha =>
+            dividirCSV(
+              linha,
+              separador
+            )
+        );
+
+
+    importarMatriz(
+      cabecalhos,
+      dados
+    );
+
+  }
+
+
+  /* ========================================================
+     INICIALIZAÇÃO
+  ======================================================== */
+
+  atualizarResumoAtual();
+
+});
+
+</script>
+
+</body>
+</html>
