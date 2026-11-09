@@ -938,6 +938,27 @@ button{
   cursor:pointer
 }
 
+.botao-imprimir{
+  min-height:45px;
+  padding:0 22px;
+  background:#263238;
+  border:1px solid #263238;
+  border-radius:8px;
+  color:#fff;
+  font-size:14px;
+  font-weight:bold;
+  cursor:pointer;
+  -webkit-tap-highlight-color:transparent
+}
+
+.botao-imprimir:hover{
+  background:#37474f;
+}
+
+.botao-imprimir:active{
+  transform:scale(.98);
+}
+
 .mensagem{
   margin-top:15px;
   padding:12px 15px;
@@ -2388,6 +2409,14 @@ footer{
         ← Editar informações
       </button>
 
+      <button
+        id="imprimirEtiquetas"
+        class="botao-imprimir"
+        type="button"
+      >
+        🖨️ Imprimir
+      </button>
+
     </div>
 
   </section>
@@ -3536,6 +3565,14 @@ document.addEventListener("DOMContentLoaded",()=>{
     }
   );
 
+  // Abre a tela nativa de impressão do navegador, inclusive em celulares compatíveis.
+  $("imprimirEtiquetas").addEventListener(
+    "click",
+    () => {
+      window.print();
+    }
+  );
+
 
   /* ========================================================
      IMPORTAÇÃO DE PLANILHA
@@ -3812,6 +3849,24 @@ document.addEventListener("DOMContentLoaded",()=>{
     }
 
 
+    // Datas em texto: DD/MM/AAAA, AAAA-MM-DD ou formato textual do JavaScript.
+    let correspondencia = texto.match(/^(\d{1,2})[\/-](\d{1,2})[\/-](\d{4})$/);
+    if(correspondencia){
+      return String(correspondencia[2]).padStart(2,"0") + "/" + correspondencia[3];
+    }
+
+    correspondencia = texto.match(/^(\d{4})-(\d{1,2})-(\d{1,2})/);
+    if(correspondencia){
+      return String(correspondencia[2]).padStart(2,"0") + "/" + correspondencia[1];
+    }
+
+    if(/^(Mon|Tue|Wed|Thu|Fri|Sat|Sun)\s/i.test(texto)){
+      const dataTexto = new Date(texto);
+      if(!isNaN(dataTexto.getTime())){
+        return String(dataTexto.getMonth() + 1).padStart(2,"0") + "/" + dataTexto.getFullYear();
+      }
+    }
+
     if(
       /^\d+(\.\d+)?$/.test(texto)
     ){
@@ -3953,15 +4008,15 @@ document.addEventListener("DOMContentLoaded",()=>{
     linhas.forEach(
       valores => {
 
-        const get =
+        const getValor =
           campo =>
             indice[campo] >= 0
-              ? String(
-                  valores[
-                    indice[campo]
-                  ] ?? ""
-                ).trim()
+              ? valores[indice[campo]]
               : "";
+
+        const get =
+          campo =>
+            String(getValor(campo) ?? "").trim();
 
 
         const m = {
@@ -3974,7 +4029,7 @@ document.addEventListener("DOMContentLoaded",()=>{
 
           validade:
             formatarValidadeExcel(
-              get("validade")
+              getValor("validade")
             ),
 
           qtdProdutos:
