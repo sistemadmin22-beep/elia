@@ -1647,7 +1647,7 @@ footer{
   <div class="cabecalho-esquerdo">
 
   <img
-  src="logo-elia.png"
+  src="logo-elia."
   alt="Isotipo ELIA"
   class="logo-sistema"
   id="logoSistema"
@@ -1661,7 +1661,7 @@ footer{
 <div class="titulo-sistema">
 
   <img
-    src="elia.png"
+    src="elia."
     alt="ELIA"
     class="logo-elia"
     id="logoElia"
@@ -3366,33 +3366,32 @@ document.addEventListener("DOMContentLoaded",()=>{
            CABEÇALHO
         ================================================== */
 
-        const cab =
-          document.createElement("div");
+    const cab =
+  document.createElement("div");
 
-        cab.className =
-          "etiqueta-cabecalho";
-
-
-        const logo =
-          document.createElement("img");
-
-        logo.className =
-          "etiqueta-logo";
-
-        logo.src =
-          "assets/logo-rio-saude.png";
-
-        logo.alt =
-          "RIO SAÚDE";
+cab.className =
+  "etiqueta-cabecalho";
 
 
-        logo.onerror =
-          function(){
+const logo =
+  document.createElement("img");
 
-            this.style.display = "none";
+logo.className =
+  "etiqueta-logo";
 
-          };
+logo.src =
+  "logo-rio-saude.png";
 
+logo.alt =
+  "RIO SAÚDE";
+
+
+logo.onerror =
+  function(){
+
+    this.style.display = "none";
+
+  };
 
         const uni =
           document.createElement("div");
