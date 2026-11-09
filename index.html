@@ -1341,10 +1341,25 @@ button{
 }
 
 /* =========================================================
-   RESPONSIVO
+   RODAPÉ
 ========================================================= */
 
-@media(max-width:700px){
+footer{
+  width:100%;
+  padding:18px 15px 24px;
+  margin:10px auto 0;
+  color:#a3aab0;
+  font-size:12px;
+  line-height:1.4;
+  text-align:center;
+}
+
+/* =========================================================
+   RESPONSIVO - COMPUTADOR, TABLET E CELULAR
+   Regras de tela separadas das regras de impressão.
+========================================================= */
+
+@media screen and (max-width:900px){
 
   .cabecalho-sistema{
     flex-direction:column;
@@ -1441,28 +1456,162 @@ button{
   }
 
   .item-material{
-    align-items:flex-start;
-    flex-direction:row;
-    gap:10px
+    display:grid;
+    grid-template-columns:22px minmax(0,1fr) auto;
+    align-items:center;
+    gap:10px;
+    padding:12px
   }
 
   .informacoes-material{
-    flex-direction:column;
-    align-items:flex-start
+    display:block;
+    width:auto;
+    min-width:0
+  }
+
+  .informacoes-material strong{
+    display:block;
+    white-space:normal;
+    overflow-wrap:anywhere;
+    margin-bottom:4px
+  }
+
+  .informacoes-material p{
+    white-space:normal;
+    overflow-wrap:anywhere;
+    line-height:1.4
+  }
+
+  .acoes-material{
+    width:auto;
+    gap:5px
   }
 
   .acoes-lote-materiais{
-    align-items:flex-start;
+    align-items:stretch;
     flex-direction:column
   }
 
   .botao-excluir-selecionados{
-    width:100%
+    width:100%;
+    min-height:40px
+  }
+}
+
+@media screen and (max-width:480px){
+  .cabecalho-sistema{
+    padding:12px 14px;
+    gap:12px
   }
 
-  .informacoes-material,
-  .acoes-material{
-    width:100%
+  .cabecalho-esquerdo{
+    gap:10px
+  }
+
+  .logo-sistema{
+    width:34px;
+    height:34px
+  }
+
+  .logo-elia{
+    width: min(115px, 34vw);
+    max-width:115px;
+    max-height:34px
+  }
+
+  .titulo-sistema span{
+    font-size:8px;
+    white-space:normal
+  }
+
+  .botao-unidade{
+    min-width:0;
+    min-height:44px;
+    font-size:14px
+  }
+
+  .conteudo{
+    width:calc(100% - 28px);
+    padding:28px 0 20px
+  }
+
+  .boas-vindas{
+    margin-bottom:22px
+  }
+
+  .boas-vindas h1,
+  .cabecalho-pagina h1{
+    font-size:25px;
+    line-height:1.2
+  }
+
+  .boas-vindas p,
+  .cabecalho-pagina p{
+    font-size:14px;
+    line-height:1.45
+  }
+
+  .card-opcao{
+    min-height:132px;
+    padding:18px 42px 18px 16px;
+    gap:13px
+  }
+
+  .icone-opcao{
+    width:52px;
+    height:52px;
+    min-width:52px;
+    font-size:23px
+  }
+
+  .card-opcao h2{
+    font-size:16px
+  }
+
+  .card-opcao p{
+    font-size:13px
+  }
+
+  .bloco-formulario,
+  .area-previsualizacao{
+    padding:16px
+  }
+
+  .grade-formulario{
+    gap:14px
+  }
+
+  .opcoes-tamanho{
+    gap:10px
+  }
+
+  .card-tamanho{
+    padding:14px 10px
+  }
+
+  .container-etiquetas{
+    padding:10px;
+    gap:14px
+  }
+
+  .etiqueta-a4,
+  .etiqueta-a5,
+  .etiqueta-a6{
+    max-width:100%
+  }
+
+  .acoes-preview{
+    gap:10px
+  }
+
+  .resumo-etiqueta{
+    padding:14px
+  }
+
+  footer{
+    padding:16px 12px 22px;
+    margin-top:4px;
+    font-size:11px
   }
 }
 </style>
